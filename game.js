@@ -86,7 +86,7 @@ monster.move = function(modifier) {
     monster.timeSinceLastMove = 0
   }
 }
-var monstersCaught = 0;
+var monstersShot = 0;
 
 // Handle keyboard controls
 var keysDown = {};
@@ -156,7 +156,7 @@ var update = function (modifier) {
 		&& hero.y <= (monster.y + 32)
 		&& monster.y <= (hero.y + 32)
 	) {
-		++monstersCaught;
+		++monstersShot;
 		reset();
 	}
 };
@@ -185,7 +185,7 @@ var render = function () {
 	ctx.font = "24px Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Goblins caught: " + monstersCaught, 32, 32);
+	ctx.fillText("Goblins Shot: " + monstersShot, 32, 32);
 };
 
 // The main game loop
