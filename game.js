@@ -1,4 +1,5 @@
 // Copied from https://github.com/lostdecade/simple_canvas_game/blob/master/js/game.js
+// Updates by Matthew and Preston Thorley
 function init() {
 
 // Create the canvas
