@@ -25,6 +25,14 @@ heroImage.onload = function () {
 };
 heroImage.src = "images/hero.png";
 
+// Fireball image
+var fireballReady = false;
+var fireballImage = new Image();
+fireballImage.onload = function() {
+  fireballReady = true;
+}
+fireballImage.src = "images/fireball.png"
+
 // Monster image
 var monsterReady = false;
 var monsterImage = new Image();
@@ -37,6 +45,24 @@ monsterImage.src = "images/monster.png";
 var hero = {
 	speed: 256 // movement in pixels per second
 };
+var fireball = {
+  speed: 256,
+  active: false
+}
+// fireball.x = 100
+// fireball.y = 100
+
+fireball.timeSinceLastMove = 0;
+fireball.move = function(modifier) {
+  fireball.timeSinceLastMove += modifier
+  var fireballSpeed = 1024 * modifier
+
+  if (fireball.timeSinceLastMove > 0.5) {
+    fireball.x += fireballSpeed
+    fireball.timeSinceLastMove = 0
+  }
+}
+
 var monster = {};
 monster.timeSinceLastMove = 0;
 monster.move = function(modifier) {
@@ -112,12 +138,16 @@ var update = function (modifier) {
 	if (39 in keysDown) { // Player holding right
 		hero.x += hero.speed * modifier;
 	}
+  if (13 in keysDown) {
+    fireball.x = hero.x + 35
+    fireball.y = hero.y
+    fireball.active = true
+  }
 
-  monster.move(modifier);
-
+  fireball.move(modifier)
+  monster.move(modifier)
   enforceBoundaries(hero)
   enforceBoundaries(monster)
-
 
 	// Are they touching?
 	if (
@@ -144,6 +174,11 @@ var render = function () {
 	if (monsterReady) {
 		ctx.drawImage(monsterImage, monster.x, monster.y);
 	}
+
+  if (fireball.active) {
+		ctx.drawImage(fireballImage, fireball.x, fireball.y);
+  }
+
 
 	// Score
 	ctx.fillStyle = "rgb(250, 250, 250)";
