@@ -41,6 +41,14 @@ monsterImage.onload = function () {
 };
 monsterImage.src = "images/monster.png";
 
+// Monster image
+var monsterDeadReady = false;
+var monsterDeadImage = new Image();
+monsterDeadImage.onload = function () {
+	monsterDeadReady = true;
+};
+monsterDeadImage.src = "images/monster-dead.png";
+
 // Game objects
 var hero = {
 	speed: 256 // movement in pixels per second
@@ -64,8 +72,19 @@ fireball.move = function(modifier) {
 }
 
 var monster = {};
+monster.reset = function() {
+  monster.alive = true
+  monster.image = monsterImage
+}
+monster.kill = function() {
+  monster.alive = false
+  monster.image = monsterDeadImage
+}
 monster.timeSinceLastMove = 0;
 monster.move = function(modifier) {
+  if (monster.alive == false) {
+    return
+  }
   monster.timeSinceLastMove += modifier
   var monsterSpeed = 1024 * modifier
 
@@ -101,6 +120,7 @@ addEventListener("keyup", function (e) {
 
 // Reset the game when the player catches a monster
 var reset = function () {
+  monster.reset()
 	hero.x = canvas.width / 2;
 	hero.y = canvas.height / 2;
 
@@ -151,13 +171,18 @@ var update = function (modifier) {
 
 	// Are they touching?
 	if (
-		hero.x <= (monster.x + 32)
-		&& monster.x <= (hero.x + 32)
-		&& hero.y <= (monster.y + 32)
-		&& monster.y <= (hero.y + 32)
+		fireball.x <= (monster.x + 8)
+		&& monster.x <= (fireball.x + 8)
+		&& fireball.y <= (monster.y + 8)
+		&& monster.y <= (fireball.y + 8)
 	) {
+    fireball.x = -100
+    fireball.y = -100
+    fireball.active = false
+    monster.kill()
 		++monstersShot;
-		reset();
+    setTimeout(reset, 1500)
+
 	}
 };
 
@@ -172,7 +197,7 @@ var render = function () {
 	}
 
 	if (monsterReady) {
-		ctx.drawImage(monsterImage, monster.x, monster.y);
+		ctx.drawImage(monster.image, monster.x, monster.y);
 	}
 
   if (fireball.active) {
