@@ -38,20 +38,26 @@ var hero = {
 	speed: 256 // movement in pixels per second
 };
 var monster = {};
-monster.move = function() {
-  var monsterSpeed = 10
-  if (Math.random() > 0.5) {
+monster.timeSinceLastMove = 0;
+monster.move = function(modifier) {
+  monster.timeSinceLastMove += modifier
+  var monsterSpeed = 1024 * modifier
+
+  if (monster.timeSinceLastMove > 0.5) {
     if (Math.random() > 0.5) {
-      monster.y += monsterSpeed
+      if (Math.random() > 0.5) {
+        monster.y += monsterSpeed
+      } else {
+        monster.y -= monsterSpeed
+      }
     } else {
-      monster.y -= monsterSpeed
+      if (Math.random() > 0.5) {
+        monster.x += monsterSpeed
+      } else {
+        monster.x -= monsterSpeed
+      }
     }
-  } else {
-    if (Math.random() > 0.5) {
-      monster.x += monsterSpeed
-    } else {
-      monster.x -= monsterSpeed
-    }
+    monster.timeSinceLastMove = 0
   }
 }
 var monstersCaught = 0;
@@ -77,6 +83,21 @@ var reset = function () {
 	monster.y = 32 + (Math.random() * (canvas.height - 64));
 };
 
+function enforceBoundaries(character) {
+  if (character.y < 0) {
+    character.y = 0
+  }
+  if (character.y > 448) {
+    character.y = 448
+  }
+  if (character.x < 0) {
+    character.x = 0
+  }
+  if (character.x > 480) {
+    character.x =480
+  }
+}
+
 // Update game objects
 var update = function (modifier) {
 	if (38 in keysDown) { // Player holding up
@@ -92,20 +113,11 @@ var update = function (modifier) {
 		hero.x += hero.speed * modifier;
 	}
 
-  if (hero.y < 0) {
-    hero.y = 0
-  }
-  if (hero.y > 448) {
-    hero.y = 448
-  }
-  if (hero.x < 0) {
-    hero.x = 0
-  }
-  if (hero.x > 480) {
-    hero.x =480
-  }
+  monster.move(modifier);
 
-  monster.move();
+  enforceBoundaries(hero)
+  enforceBoundaries(monster)
+
 
 	// Are they touching?
 	if (
