@@ -1,4 +1,4 @@
-// Copied from https://github.com/lostdecade/simple_canvas_game/blob/master/js/game.js
+	// Copied from https://github.com/lostdecade/simple_canvas_game/blob/master/js/game.js
 // Updates by Matthew and Preston Thorley
 function init() {
 
@@ -171,10 +171,10 @@ var update = function (modifier) {
 
 	// Are they touching?
 	if (
-		fireball.x <= (monster.x + 8)
-		&& monster.x <= (fireball.x + 8)
-		&& fireball.y <= (monster.y + 8)
-		&& monster.y <= (fireball.y + 8)
+		fireball.x <= (monster.x + 16)
+		&& monster.x <= (fireball.x + 16)
+		&& fireball.y <= (monster.y + 16)
+		&& monster.y <= (fireball.y + 16)
 	) {
     fireball.x = -100
     fireball.y = -100
