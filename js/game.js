@@ -1,10 +1,16 @@
-	// Copied from https://github.com/lostdecade/simple_canvas_game/blob/master/js/game.js
+// Copied from https://github.com/lostdecade/simple_canvas_game/blob/master/js/game.js
 // Updates by Matthew and Preston Thorley
 // TODO
 // colision detection
 // objects (with images and placement)
 // global collision detection
 // maps
+
+function Game() {
+  return {
+    name: "goblin-chase"
+  }
+}
 
 function init() {
 
