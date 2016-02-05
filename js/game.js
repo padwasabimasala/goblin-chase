@@ -4,9 +4,33 @@
 // colision detection
 // objects (with images and placement)
 // global collision detection
+// some kind of event passing/notification
+// make game objects actors
 // maps
+//
+// Game keeps a hash of game objects
+//   each tick it iterates the objects
+//   notifies each of global events
+//   calls call/move/render? on each
+//   detects any collisions
+//   notifites affected parties of colisions
+//   rise repeat
+//
+// Because each game actor has a fifo inbox
+// it will process any collisions before rendering the next frame
+//
+// game = new Game()
+// hero = Game.object("image", {'options':'etc'})
+// hero.onEvent("upKey", function() { hero.y += 10 }
+// hero.onEvent("enterKey", function() { // shoot fire ball }
+// goblin = Game.object("image", {'options':'etc'})
+// goblin.onEvent("colision", function(otherObject) { // die if otherObject is a fireball }
+// game.add(hero)
+// game.add(goblin)
+// game.run()
 
 function Game() {
+
   return {
     name: "goblin-chase"
   }
