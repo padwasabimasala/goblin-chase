@@ -22,40 +22,27 @@ describe("Actor", function () {
   it("receives a callback for a message", function() {
     var actor = new Actor()
     var cb = function(message) {}
-    actor.receive(cb)
+    actor.receive(/.*/, cb)
     expect(actor.callback).toEqual(cb)
   })
 
   it("calls the callback with the message", function() {
     var actor = new Actor()
-    var cb = function(message) { return message }
-    actor.receive(cb)
+    actor.receive(/.*/, function(message) { return message })
     actor.message("the message")
     expect(actor.call()).toEqual("the message")
   })
 
-  // it("receives a callback for a message", function() {
-  //   var actor = new Actor()
-  //   actor.receive(function(message) {
-  //     return message
-  //   })
-  //   actor.message("the message")
-  //   expect(actor.call()).toEqual("the message")
-  // })
-  //
+  it("receives messages in the order their given", function() {
+    var actor = new Actor()
+    actor.receive(/.*/, function(message) { return message })
+    actor.message("first message")
+    actor.message("second message")
+    expect(actor.call()).toEqual("first message")
+    expect(actor.call()).toEqual("second message")
+  })
 
 
-
-  //
-  // it("handles messages in the order their received", function() {
-  //   var actor = new Actor("chase", function(message) {
-  //     return message
-  //   })
-  //   actor.receive("first message")
-  //   actor.receive("second message")
-  //   expect(actor.call()).toEqual("first message")
-  //   expect(actor.call()).toEqual("second message")
-  // })
 
 });
 

@@ -26,24 +26,37 @@
  */
 
 function Actor(id) {
+  this.messages = new Array()
+  this.receivers = {}
+  this.patterns = []
+
   this.id  = id || 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
     return v.toString(16);
   })
 
   this.message = function(message) {
-    this._message = message
+    this.messages.push(message)
     return true
   }
 
-  this.receive = function(callback) {
+  this.receive = function(pattern, callback) {
+    this.patterns.push(pattern)
+    this.receivers[pattern] = callback
     this.callback = callback
   }
 
   this.call = function() {
-    console.log(this.message)
-    return this.callback(this._message)
+    var earliestMessage = this.messages.shift()
 
+    for (i = 0; i < this.patterns.length; i++){
+      var pattern = this.patterns[i]
+      if (pattern.test(earliestMessage) == true) {
+        var callback = this.receivers[pattern]
+        return callback(earliestMessage)
+        console.log("matched")
+      }
+    }
   }
   // this.callback = cb
   // this.messages = new Array()
