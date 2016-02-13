@@ -49,9 +49,11 @@ describe("Actor", function () {
     actor.message("first message")
     actor.message("second message")
     actor.message("third message")
+    actor.message("not the second message")
     expect(actor.call()).toEqual("first first message")
     expect(actor.call()).toEqual("second second message")
-    expect(actor.call()).toEqual(true)
+    expect(actor.call()).toEqual(false)
+    expect(actor.call()).toEqual("second not the second message")
   })
 
 
