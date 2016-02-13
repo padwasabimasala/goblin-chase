@@ -57,6 +57,7 @@ function Actor(id) {
         console.log("matched")
       }
     }
+    return true
   }
   // this.callback = cb
   // this.messages = new Array()

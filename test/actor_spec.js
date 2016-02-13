@@ -42,6 +42,17 @@ describe("Actor", function () {
     expect(actor.call()).toEqual("second message")
   })
 
+  it("responds to message with the matching receiver", function() {
+    var actor = new Actor()
+    actor.receive(/second/, function(message) { return "second " + message })
+    actor.receive(/first/, function(message) { return "first " + message })
+    actor.message("first message")
+    actor.message("second message")
+    actor.message("third message")
+    expect(actor.call()).toEqual("first first message")
+    expect(actor.call()).toEqual("second second message")
+    expect(actor.call()).toEqual(true)
+  })
 
 
 });
