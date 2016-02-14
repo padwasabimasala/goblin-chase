@@ -34,14 +34,12 @@ function Game(width, height) {
   this.canvas.width = width;
   this.canvas.height = height;
   this.context = this.canvas.getContext("2d")
+  document.body.appendChild(this.canvas);
 }
 
 function init() {
 // changeFavicon("file:///Users/matthew.thorley/src/goblin-chase/images/icon.png")
 var game = new Game(512,480)
-var canvas = game.canvas
-var ctx = game.context
-document.body.appendChild(canvas);
 
 // Background image
 var bgReady = false;
@@ -155,12 +153,12 @@ addEventListener("keyup", function (e) {
 // Reset the game when the player catches a monster
 var reset = function () {
   monster.reset()
-	hero.x = canvas.width / 2;
-	hero.y = canvas.height / 2;
+	hero.x = game.canvas.width / 2;
+	hero.y = game.canvas.height / 2;
 
 	// Throw the monster somewhere on the screen randomly
-	monster.x = 32 + (Math.random() * (canvas.width - 64));
-	monster.y = 32 + (Math.random() * (canvas.height - 64));
+	monster.x = 32 + (Math.random() * (game.canvas.width - 64));
+	monster.y = 32 + (Math.random() * (game.canvas.height - 64));
 };
 
 function enforceBoundaries(character) {
@@ -223,28 +221,28 @@ var update = function (modifier) {
 // Draw everything
 var render = function () {
 	if (bgReady) {
-		ctx.drawImage(bgImage, 0, 0);
+		game.context.drawImage(bgImage, 0, 0);
 	}
 
 	if (heroReady) {
-		ctx.drawImage(heroImage, hero.x, hero.y);
+		game.context.drawImage(heroImage, hero.x, hero.y);
 	}
 
 	if (monsterReady) {
-		ctx.drawImage(monster.image, monster.x, monster.y);
+		game.context.drawImage(monster.image, monster.x, monster.y);
 	}
 
   if (fireball.active) {
-		ctx.drawImage(fireballImage, fireball.x, fireball.y);
+		game.context.drawImage(fireballImage, fireball.x, fireball.y);
   }
 
 
 	// Score
-	ctx.fillStyle = "rgb(250, 250, 250)";
-	ctx.font = "24px Helvetica";
-	ctx.textAlign = "left";
-	ctx.textBaseline = "top";
-	ctx.fillText("Goblins Shot: " + monstersShot, 32, 32);
+	game.context.fillStyle = "rgb(250, 250, 250)";
+	game.context.font = "24px Helvetica";
+	game.context.textAlign = "left";
+	game.context.textBaseline = "top";
+	game.context.fillText("Goblins Shot: " + monstersShot, 32, 32);
 };
 
 // The main game loop
