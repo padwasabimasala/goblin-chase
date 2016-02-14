@@ -49,6 +49,8 @@ function init() {
   // changeFavicon("file:///Users/matthew.thorley/src/goblin-chase/images/icon.png")
   var game = new Game(512,480)
 
+  var background = new GameObject("background", "images/background.png", 0, 0)
+
   var hero = new GameObject("hero", "images/hero.png")
   hero.speed = 256
 
@@ -59,7 +61,6 @@ function init() {
   fireball.move = function(modifier) {
     fireball.timeSinceLastMove += modifier
     var fireballSpeed = 1024 * modifier
-
     if (fireball.timeSinceLastMove > 0.5) {
       fireball.x += fireballSpeed
       fireball.timeSinceLastMove = 0
@@ -181,16 +182,6 @@ function init() {
     }
   };
 
-  var background = new GameObject("background", "images/background.png", 0, 0)
-  // Draw everything
-  var render = function () {
-    game.context.drawImage(background.image, background.x, background.y)
-    game.context.drawImage(hero.image, hero.x, hero.y)
-    game.context.drawImage(monster.image, monster.x, monster.y)
-    game.context.drawImage(fireball.image, fireball.x, fireball.y)
-    drawScore()
-  };
-
   function drawScore() {
     game.context.fillStyle = "rgb(250, 250, 250)";
     game.context.font = "24px Helvetica";
@@ -198,6 +189,16 @@ function init() {
     game.context.textBaseline = "top";
     game.context.fillText("Goblins Shot: " + monstersShot, 32, 32);
   }
+
+  var gameObjects = [background, hero, monster, fireball]
+
+  var render = function () {
+    for (i in gameObjects) {
+      var gameObject = gameObjects[i]
+      game.context.drawImage(gameObject.image, gameObject.x, gameObject.y)
+    }
+    drawScore()
+  };
 
   // The main game loop
   requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
