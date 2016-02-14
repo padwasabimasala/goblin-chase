@@ -43,13 +43,8 @@ function GameObject(id, image_url, x, y) {
   this.image.src = image_url
   this.x = x
   this.y = y
-  this.ready = false
-  // Todo for some reason this onload doesnt seem to be called
-  this.ready = true
-  this.image.onload = function () {
-    this.ready = true;
-  }
 }
+
 function init() {
   // changeFavicon("file:///Users/matthew.thorley/src/goblin-chase/images/icon.png")
   var game = new Game(512,480)
@@ -189,10 +184,10 @@ function init() {
   var background = new GameObject("background", "images/background.png", 0, 0)
   // Draw everything
   var render = function () {
-    if (background.ready) { game.context.drawImage(background.image, background.x, background.y); }
-    if (hero.ready) { game.context.drawImage(hero.image, hero.x, hero.y); }
-    if (monster.ready) { game.context.drawImage(monster.image, monster.x, monster.y); }
-    if (fireball.active) { game.context.drawImage(fireball.image, fireball.x, fireball.y); }
+    game.context.drawImage(background.image, background.x, background.y)
+    game.context.drawImage(hero.image, hero.x, hero.y)
+    game.context.drawImage(monster.image, monster.x, monster.y)
+    game.context.drawImage(fireball.image, fireball.x, fireball.y)
     drawScore()
   };
 
