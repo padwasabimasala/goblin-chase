@@ -31,67 +31,34 @@ function Actor(id) {
   this.receivers = {}
 
   // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-  //
   this.id  = id || 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
     return v.toString(16);
   })
-
-  this.message = function(message) {
-    this.mailbox.push(message)
-    return true
-  }
-
-  this.receive = function(pattern, callback) {
-    this.patterns.push(pattern) // todo keep this uniq
-    this.receivers[pattern] = callback
-    this.callback = callback
-    return true
-  }
-
-  this.call = function() {
-    var earliestMessage = this.mailbox.shift()
-    if (!earliestMessage) { return false }
-
-    for (i = 0; i < this.patterns.length; i++){
-      var pattern = this.patterns[i]
-      if (pattern.test(earliestMessage) == true) {
-        var callback = this.receivers[pattern]
-        return callback(earliestMessage)
-      }
-    }
-    return false
-  }
 }
 
-function ActorSystem() {
-  this.actors = {}
+Actor.prototype.message = function(message) {
+  this.mailbox.push(message)
+  return true
+}
 
-  this.spawn = function(actorId) {
-    var actor = new Actor(actorId)
-    this.actors[actor.id] = actor
-    return actor
-  }
+Actor.prototype.receive = function(pattern, callback) {
+  this.patterns.push(pattern) // todo keep this uniq
+  this.receivers[pattern] = callback
+  this.callback = callback
+  return true
+}
 
-  this.send = function(message, actorId) {
-    console.log("actors :" + this.actors)
-    if (!actorId) {
-      for (var actorId in this.actors) {
-        console.log("actorId :" + actorId)
-        if (this.actors.hasOwnProperty(actorId)) {
-          this.actors[actorId].message(message)
-        }
-      }
-    }
-    this.actors[actorId].message(message)
-  }
+Actor.prototype.call = function() {
+  var earliestMessage = this.mailbox.shift()
+  if (!earliestMessage) { return false }
 
-  this.callEach = function() {
-    for (var actorId in this.actors) {
-      if (this.actors.hasOwnProperty(actorId)) {
-        console.log("calling: " + actorId)
-        this.actors[actorId].call()
-      }
+  for (i = 0; i < this.patterns.length; i++){
+    var pattern = this.patterns[i]
+    if (pattern.test(earliestMessage) == true) {
+      var callback = this.receivers[pattern]
+      return callback(earliestMessage)
     }
   }
+  return false
 }
