@@ -71,4 +71,17 @@ describe("ActorSystem", function () {
     $.send(actor.id, "I am the hero")
     expect(actor.call()).toEqual("hero: I am the hero")
   })
+
+  it("sends a message to all actors", function() {
+    var $ = new ActorSystem()
+    var hero = $.spawn("hero")
+    var goblin = $.spawn("goblin")
+
+    hero.receive(/.*/, function(message) { return "hero: " + message })
+    goblin.receive(/.*/, function(message) { return "goblin: " + message })
+
+    $.send("Fight!")
+    expect(hero.call()).toEqual("hero: Fight!")
+    expect(goblin.call()).toEqual("goblin: Fight!")
+  })
 });

@@ -62,14 +62,25 @@ function Actor(id) {
 }
 
 function ActorSystem() {
+  this.actorIds = []
   this.actors = {}
+
   this.spawn = function(actorId) {
     var actor = new Actor(actorId)
+    this.actorIds.push(actorId)
     this.actors[actor.id] = actor
     return actor
   }
 
   this.send = function(actorId, message) {
-    this.actors[actorId + "asdf"].message(message)
+    if (!message) {
+      message = actorId
+      for (i = 0; i < this.actorIds.length; i++){
+        var actorId = this.actorIds[i]
+        console.log("actorId: " + actorId)
+        this.actors[actorId].message(message)
+      }
+    }
+    this.actors[actorId].message(message)
   }
 }
