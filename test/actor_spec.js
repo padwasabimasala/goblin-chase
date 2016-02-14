@@ -12,7 +12,6 @@ describe("Actor", function () {
 
   it("accepts a message", function() {
     var actor = new Actor()
-    console.log(actor.id)
     expect(actor.message("the message")).toEqual(true)
   })
 
@@ -68,7 +67,7 @@ describe("ActorSystem", function () {
     var $ = new ActorSystem()
     var actor = $.spawn("hero")
     actor.receive(/.*/, function(message) { return "hero: " + message })
-    $.send(actor.id, "I am the hero")
+    $.send("I am the hero", actor.id)
     expect(actor.call()).toEqual("hero: I am the hero")
   })
 
@@ -84,4 +83,26 @@ describe("ActorSystem", function () {
     expect(hero.call()).toEqual("hero: Fight!")
     expect(goblin.call()).toEqual("goblin: Fight!")
   })
+
+  it("calls all the actors", function() {
+    var $ = new ActorSystem()
+    var hero = $.spawn("hero")
+    var goblin = $.spawn("goblin")
+    var messages = []
+
+    hero.receive(/.*/, function(message) { messages.push("hero: " + message) })
+    goblin.receive(/.*/, function(message) { messages.push("goblin: " + message) })
+
+
+    $.send("Fight!")
+    // $.send("Win!", hero.id)
+    // $.send("Die!", goblin.id)
+    hero.call()
+    goblin.call()
+    expect(messages).toEqual(["hero: Fight!", "goblin: Fight!"])
+
+    // $.callEach()
+    // expect(messages).toEqual(["hero: Fight!", "goblin: Fight!", "hero: Win!", "goblin: Die!"])
+  })
+
 });

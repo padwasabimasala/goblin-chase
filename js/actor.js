@@ -2,20 +2,20 @@
  *
  *    ActorSystem keeps an HashMap of current Actors by Id
  *
- *    var spawn = ActorSystem.spawn(optional actorId) // returns actorId
- *    var receive = ActorSystem.receive(actorId, pattern, callback)
- *    var send = ActorSystem.send(actorId || All, message)
- *    var ANY = WebActors.ANY;
+ *    var spawn = ActorSystem.spawn([actorId]) // returns actorId
+ *    var send = ActorSystem.send(message, [actorId])
  *
  *    spawn registers a new actor (passing an optional id) and returns it's id
  *
+ *    send delivers a message to an Actors mailbox
+ *      mailbox are strings
+ *
+ *    var receive = Actor.receive(pattern, callback)
+ *
  *    receive takes an id, a pattern, and a callback
  *      it registers the function on that Actor
- *      as a callback for messages matching the pattern
+ *      as a callback for mailbox matching the pattern
  *      pattern is a regex object
- *
- *    send delivers a message to an Actors mailbox
- *      messages are strings
  *
  *    each loop ActorSytem iterates over all the actors and calls call
  *    Actor.call takes the oldest message from the mailbox and tries to match it
@@ -26,7 +26,7 @@
  */
 
 function Actor(id) {
-  this.messages = new Array()
+  this.mailbox = new Array()
   this.receivers = {}
   this.patterns = []
 
@@ -36,7 +36,7 @@ function Actor(id) {
   })
 
   this.message = function(message) {
-    this.messages.push(message)
+    this.mailbox.push(message)
     return true
   }
 
@@ -47,14 +47,14 @@ function Actor(id) {
   }
 
   this.call = function() {
-    var earliestMessage = this.messages.shift()
+    var earliestMessage = this.mailbox.shift()
+    console.log("message: " + earliestMessage)
 
     for (i = 0; i < this.patterns.length; i++){
       var pattern = this.patterns[i]
       if (pattern.test(earliestMessage) == true) {
         var callback = this.receivers[pattern]
         return callback(earliestMessage)
-        console.log("matched")
       }
     }
     return false
@@ -72,15 +72,23 @@ function ActorSystem() {
     return actor
   }
 
-  this.send = function(actorId, message) {
-    if (!message) {
-      message = actorId
+  this.send = function(message, actorId) {
+    if (!actorId) {
       for (i = 0; i < this.actorIds.length; i++){
         var actorId = this.actorIds[i]
-        console.log("actorId: " + actorId)
         this.actors[actorId].message(message)
       }
     }
     this.actors[actorId].message(message)
+  }
+
+  this.callEach = function() {
+    for (i = 0; i < this.actorIds.length; i++){
+      console.log("i " + i)
+      var actorId = this.actorIds[i]
+      console.log("calling: " + actorId)
+      var actor = this.actors[actorId]
+      // actor.call()
+    }
   }
 }
