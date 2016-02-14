@@ -54,31 +54,12 @@ function init() {
   // changeFavicon("file:///Users/matthew.thorley/src/goblin-chase/images/icon.png")
   var game = new Game(512,480)
 
-
   var hero = new GameObject("hero", "images/hero.png")
   hero.speed = 256
 
   var fireball = new GameObject("fireball", "images/fireball.png")
   fireball.speed = 256
   fireball.active = false
-
-  // Monster image
-  var monsterReady = false;
-  var monsterImage = new Image();
-  monsterImage.onload = function () {
-    monsterReady = true;
-  };
-  monsterImage.src = "images/monster.png";
-
-  // Monster image
-  var monsterDeadReady = false;
-  var monsterDeadImage = new Image();
-  monsterDeadImage.onload = function () {
-    monsterDeadReady = true;
-  };
-  monsterDeadImage.src = "images/monster-dead.png";
-
-
   fireball.timeSinceLastMove = 0;
   fireball.move = function(modifier) {
     fireball.timeSinceLastMove += modifier
@@ -90,11 +71,14 @@ function init() {
     }
   }
 
-  var monster = {};
+  var monster = new GameObject("monster", "images/monster.png")
+  var monsterLiveImage = monster.image
   monster.reset = function() {
     monster.alive = true
-    monster.image = monsterImage
+    monster.image = monsterLiveImage
   }
+  var monsterDeadImage = new Image();
+  monsterDeadImage.src = "images/monster-dead.png";
   monster.kill = function() {
     monster.alive = false
     monster.image = monsterDeadImage
@@ -124,6 +108,7 @@ function init() {
       monster.timeSinceLastMove = 0
     }
   }
+
   var monstersShot = 0;
 
   // Handle keyboard controls
@@ -156,7 +141,6 @@ function init() {
     monster.reset()
     hero.x = game.canvas.width / 2;
     hero.y = game.canvas.height / 2;
-
     // Throw the monster somewhere on the screen randomly
     monster.x = 32 + (Math.random() * (game.canvas.width - 64));
     monster.y = 32 + (Math.random() * (game.canvas.height - 64));
@@ -199,7 +183,6 @@ function init() {
       monster.kill()
       ++monstersShot;
       setTimeout(setup, 1500)
-
     }
   };
 
@@ -208,15 +191,18 @@ function init() {
   var render = function () {
     if (background.ready) { game.context.drawImage(background.image, background.x, background.y); }
     if (hero.ready) { game.context.drawImage(hero.image, hero.x, hero.y); }
-    if (monsterReady) { game.context.drawImage(monster.image, monster.x, monster.y); }
+    if (monster.ready) { game.context.drawImage(monster.image, monster.x, monster.y); }
     if (fireball.active) { game.context.drawImage(fireball.image, fireball.x, fireball.y); }
-    // Score
+    drawScore()
+  };
+
+  function drawScore() {
     game.context.fillStyle = "rgb(250, 250, 250)";
     game.context.font = "24px Helvetica";
     game.context.textAlign = "left";
     game.context.textBaseline = "top";
     game.context.fillText("Goblins Shot: " + monstersShot, 32, 32);
-  };
+  }
 
   // The main game loop
   requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
