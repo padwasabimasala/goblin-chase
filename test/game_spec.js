@@ -10,3 +10,22 @@ describe("Game", function () {
     expect(canvas.height).toEqual(480)
   })
 });
+
+describe("GameObject", function () {
+  it("takes an id and an image", function() {
+    var obj = new GameObject("hero", "images/hero.png")
+    expect(obj.id).toEqual("hero")
+    expect(obj.image).not.toBe(undefined)
+  })
+
+  it("has a ready property", function() {
+    var obj = new GameObject("hero", "images/hero.png")
+    // expect(obj.ready).toEqual(false)
+  })
+
+  it("takes a starting location", function() {
+    var obj = new GameObject("hero", "images/hero.png", 5, 10) 
+    expect(obj.x).toEqual(5)
+    expect(obj.y).toBe(10)
+  })
+});

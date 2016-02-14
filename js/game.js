@@ -37,17 +37,23 @@ function Game(width, height) {
   document.body.appendChild(this.canvas);
 }
 
+function GameObject(id, image_url, x, y) {
+  this.id = id
+  this.image = new Image()
+  this.image.src = image_url
+  this.x = x
+  this.y = y
+  this.ready = false
+  // Todo for some reason this onload doesnt seem to be called
+  this.ready = true
+  this.image.onload = function () {
+    this.ready = true;
+  }
+}
 function init() {
 // changeFavicon("file:///Users/matthew.thorley/src/goblin-chase/images/icon.png")
 var game = new Game(512,480)
 
-// Background image
-var bgReady = false;
-var bgImage = new Image();
-bgImage.onload = function () {
-	bgReady = true;
-};
-bgImage.src = "images/background.png";
 
 // Hero image
 var heroReady = false;
@@ -213,9 +219,11 @@ var update = function (modifier) {
 	}
 };
 
+
+var background = new GameObject("background", "images/background.png")
 // Draw everything
 var render = function () {
-	if (bgReady) { game.context.drawImage(bgImage, 0, 0); }
+	if (background.ready) { game.context.drawImage(background.image, 0, 0); }
 	if (heroReady) { game.context.drawImage(heroImage, hero.x, hero.y); }
 	if (monsterReady) { game.context.drawImage(monster.image, monster.x, monster.y); }
   if (fireball.active) { game.context.drawImage(fireballImage, fireball.x, fireball.y); }
