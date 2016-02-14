@@ -29,23 +29,18 @@
 // game.add(goblin)
 // game.run()
 
-function Game() {
-
-  return {
-    name: "goblin-chase"
-  }
+function Game(width, height) {
+  this.canvas = document.createElement("canvas");
+  this.canvas.width = width;
+  this.canvas.height = height;
+  this.context = this.canvas.getContext("2d")
 }
 
 function init() {
-
-
 // changeFavicon("file:///Users/matthew.thorley/src/goblin-chase/images/icon.png")
-
-// Create the canvas
-var canvas = document.createElement("canvas");
-var ctx = canvas.getContext("2d");
-canvas.width = 512;
-canvas.height = 480;
+var game = new Game(512,480)
+var canvas = game.canvas
+var ctx = game.context
 document.body.appendChild(canvas);
 
 // Background image

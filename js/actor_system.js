@@ -9,15 +9,12 @@ ActorSystem.prototype.spawn = function(actorId) {
   }
 
 ActorSystem.prototype.send = function(message, actorId) {
-  console.log("start send")
 
   if (!actorId) {
     for (var actorId in this.actors) {
       if (this.actors.hasOwnProperty(actorId)) {
-        console.log(actorId + " gets messsage " + message)
         var actor = this.actors[actorId]
         this.actors[actorId].message(message)
-        console.log(actorId + ".mailbox " + actor.mailbox)
       }
     }
     return true

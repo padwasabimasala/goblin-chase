@@ -2,8 +2,11 @@
 // 2 ABC
 
 describe("Game", function () {
-  it("returns 1 for 1", function() {
-    var game = new Game();
-    expect(game.name).toEqual("goblin-chase")
+  it("has a canvas", function() {
+    var game = new Game(512,480)
+    var canvas = game.canvas
+    console.log(canvas)
+    expect(canvas.width).toEqual(512)
+    expect(canvas.height).toEqual(480)
   })
 });
