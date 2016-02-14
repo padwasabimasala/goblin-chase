@@ -151,7 +151,7 @@ addEventListener("keyup", function (e) {
 }, false);
 
 // Reset the game when the player catches a monster
-var reset = function () {
+var setup = function () {
   monster.reset()
 	hero.x = game.canvas.width / 2;
 	hero.y = game.canvas.height / 2;
@@ -213,29 +213,17 @@ var update = function (modifier) {
     fireball.active = false
     monster.kill()
 		++monstersShot;
-    setTimeout(reset, 1500)
+    setTimeout(setup, 1500)
 
 	}
 };
 
 // Draw everything
 var render = function () {
-	if (bgReady) {
-		game.context.drawImage(bgImage, 0, 0);
-	}
-
-	if (heroReady) {
-		game.context.drawImage(heroImage, hero.x, hero.y);
-	}
-
-	if (monsterReady) {
-		game.context.drawImage(monster.image, monster.x, monster.y);
-	}
-
-  if (fireball.active) {
-		game.context.drawImage(fireballImage, fireball.x, fireball.y);
-  }
-
+	if (bgReady) { game.context.drawImage(bgImage, 0, 0); }
+	if (heroReady) { game.context.drawImage(heroImage, hero.x, hero.y); }
+	if (monsterReady) { game.context.drawImage(monster.image, monster.x, monster.y); }
+  if (fireball.active) { game.context.drawImage(fireballImage, fireball.x, fireball.y); }
 
 	// Score
 	game.context.fillStyle = "rgb(250, 250, 250)";
@@ -246,25 +234,19 @@ var render = function () {
 };
 
 // The main game loop
+requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
+
+var then = Date.now();
 var main = function () {
 	var now = Date.now();
 	var delta = now - then;
-
 	update(delta / 1000);
 	render();
-
 	then = now;
-
-	// Request to do this again ASAP
 	requestAnimationFrame(main);
 };
 
-// Cross-browser support for requestAnimationFrame
-var w = window;
-requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
-
 // Let's play this game!
-var then = Date.now();
-reset();
+setup();
 main();
 }
