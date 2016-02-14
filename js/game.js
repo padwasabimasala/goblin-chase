@@ -220,10 +220,10 @@ var update = function (modifier) {
 };
 
 
-var background = new GameObject("background", "images/background.png")
+var background = new GameObject("background", "images/background.png", 0, 0)
 // Draw everything
 var render = function () {
-	if (background.ready) { game.context.drawImage(background.image, 0, 0); }
+	if (background.ready) { game.context.drawImage(background.image, background.x, background.y); }
 	if (heroReady) { game.context.drawImage(heroImage, hero.x, hero.y); }
 	if (monsterReady) { game.context.drawImage(monster.image, monster.x, monster.y); }
   if (fireball.active) { game.context.drawImage(fireballImage, fireball.x, fireball.y); }
