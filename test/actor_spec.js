@@ -1,6 +1,3 @@
-// 1 > 1
-// 2 ABC
-
 describe("Actor", function () {
   it("get a default id", function() {
     var actor = new Actor();
@@ -55,24 +52,23 @@ describe("Actor", function () {
     expect(actor.call()).toEqual(false)
     expect(actor.call()).toEqual("second not the second message")
   })
-
-
 });
 
 describe("ActorSystem", function () {
-  // it("returns new actors", function() {
-  //   var $ = new ActorSystem()
-  //   var actor = $.createActor("phil")
-  //   expect(actor.name).toEqual("phil")
-  // })
+  it("spawns new actors", function() {
+    var $ = new ActorSystem()
+    var actor = $.spawn("hero")
+    actor.receive(/.*/, function(message) { return "actor " + message })
+    actor.message("trying the ActorSystem")
+    expect(actor.id).toEqual("hero")
+    expect(actor.call()).toEqual("actor trying the ActorSystem")
+  })
 
-  // it("sends an actor a message", function() {
-  //   var $ = new ActorSystem()
-  //   var actor = $.createActor("phil", function(message){
-  //     return message
-  //   })
-  //   $.send(actor.uuid, "the message")
-  //   expect(actor.call()).toEqual("the message")
-  // })
-
+  it("sends a message to an actor", function() {
+    var $ = new ActorSystem()
+    var actor = $.spawn("hero")
+    actor.receive(/.*/, function(message) { return "hero: " + message })
+    $.send(actor.id, "I am the hero")
+    expect(actor.call()).toEqual("hero: I am the hero")
+  })
 });

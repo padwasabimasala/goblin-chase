@@ -59,28 +59,17 @@ function Actor(id) {
     }
     return false
   }
-  // this.callback = cb
-  // this.messages = new Array()
-  //
-  // this.receive = function(message) {
-  //   this.messages.push(message)
-  //   return true
-  // }
-  //
-  // this.call = function() {
-  //   return this.callback(this.messages.shift())
-  // }
 }
 
 function ActorSystem() {
   this.actors = {}
-  this.createActor = function(name) {
-    var actor = new Actor(name)
-    this.actors[actor.uuid] = actor
+  this.spawn = function(actorId) {
+    var actor = new Actor(actorId)
+    this.actors[actor.id] = actor
     return actor
   }
 
-  this.send = function(actorUuid, message) {
-    this.actors[actorUuid].receive(message)
+  this.send = function(actorId, message) {
+    this.actors[actorId + "asdf"].message(message)
   }
 }
