@@ -27,9 +27,11 @@
 
 function Actor(id) {
   this.mailbox = new Array()
-  this.receivers = {}
   this.patterns = []
+  this.receivers = {}
 
+  // http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+  //
   this.id  = id || 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
     var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
     return v.toString(16);
@@ -41,14 +43,15 @@ function Actor(id) {
   }
 
   this.receive = function(pattern, callback) {
-    this.patterns.push(pattern)
+    this.patterns.push(pattern) // todo keep this uniq
     this.receivers[pattern] = callback
     this.callback = callback
+    return true
   }
 
   this.call = function() {
     var earliestMessage = this.mailbox.shift()
-    console.log("message: " + earliestMessage)
+    if (!earliestMessage) { return false }
 
     for (i = 0; i < this.patterns.length; i++){
       var pattern = this.patterns[i]
@@ -62,33 +65,33 @@ function Actor(id) {
 }
 
 function ActorSystem() {
-  this.actorIds = []
   this.actors = {}
 
   this.spawn = function(actorId) {
     var actor = new Actor(actorId)
-    this.actorIds.push(actorId)
     this.actors[actor.id] = actor
     return actor
   }
 
   this.send = function(message, actorId) {
+    console.log("actors :" + this.actors)
     if (!actorId) {
-      for (i = 0; i < this.actorIds.length; i++){
-        var actorId = this.actorIds[i]
-        this.actors[actorId].message(message)
+      for (var actorId in this.actors) {
+        console.log("actorId :" + actorId)
+        if (this.actors.hasOwnProperty(actorId)) {
+          this.actors[actorId].message(message)
+        }
       }
     }
     this.actors[actorId].message(message)
   }
 
   this.callEach = function() {
-    for (i = 0; i < this.actorIds.length; i++){
-      console.log("i " + i)
-      var actorId = this.actorIds[i]
-      console.log("calling: " + actorId)
-      var actor = this.actors[actorId]
-      // actor.call()
+    for (var actorId in this.actors) {
+      if (this.actors.hasOwnProperty(actorId)) {
+        console.log("calling: " + actorId)
+        this.actors[actorId].call()
+      }
     }
   }
 }

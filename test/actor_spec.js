@@ -27,6 +27,7 @@ describe("Actor", function () {
     actor.receive(/.*/, function(message) { return message })
     actor.message("the message")
     expect(actor.call()).toEqual("the message")
+    expect(actor.call()).toEqual(false)
   })
 
   it("receives messages in the order their given", function() {
@@ -36,6 +37,7 @@ describe("Actor", function () {
     actor.message("second message")
     expect(actor.call()).toEqual("first message")
     expect(actor.call()).toEqual("second message")
+    expect(actor.call()).toEqual(false)
   })
 
   it("responds to message with the matching receiver", function() {
@@ -55,8 +57,8 @@ describe("Actor", function () {
 
 describe("ActorSystem", function () {
   it("spawns new actors", function() {
-    var $ = new ActorSystem()
-    var actor = $.spawn("hero")
+    var sys = new ActorSystem()
+    var actor = sys.spawn("hero")
     actor.receive(/.*/, function(message) { return "actor " + message })
     actor.message("trying the ActorSystem")
     expect(actor.id).toEqual("hero")
@@ -64,45 +66,49 @@ describe("ActorSystem", function () {
   })
 
   it("sends a message to an actor", function() {
-    var $ = new ActorSystem()
-    var actor = $.spawn("hero")
+    var sys = new ActorSystem()
+    var actor = sys.spawn("hero")
     actor.receive(/.*/, function(message) { return "hero: " + message })
-    $.send("I am the hero", actor.id)
+    sys.send("I am the hero", actor.id)
     expect(actor.call()).toEqual("hero: I am the hero")
   })
 
   it("sends a message to all actors", function() {
-    var $ = new ActorSystem()
-    var hero = $.spawn("hero")
-    var goblin = $.spawn("goblin")
+    var sys = new ActorSystem()
+    var hero = sys.spawn("hero")
+    var goblin = sys.spawn("goblin")
 
     hero.receive(/.*/, function(message) { return "hero: " + message })
     goblin.receive(/.*/, function(message) { return "goblin: " + message })
 
-    $.send("Fight!")
+    sys.send("Fight!")
     expect(hero.call()).toEqual("hero: Fight!")
     expect(goblin.call()).toEqual("goblin: Fight!")
   })
 
-  it("calls all the actors", function() {
-    var $ = new ActorSystem()
-    var hero = $.spawn("hero")
-    var goblin = $.spawn("goblin")
-    var messages = []
-
-    hero.receive(/.*/, function(message) { messages.push("hero: " + message) })
-    goblin.receive(/.*/, function(message) { messages.push("goblin: " + message) })
-
-
-    $.send("Fight!")
-    // $.send("Win!", hero.id)
-    // $.send("Die!", goblin.id)
-    hero.call()
-    goblin.call()
-    expect(messages).toEqual(["hero: Fight!", "goblin: Fight!"])
-
-    // $.callEach()
-    // expect(messages).toEqual(["hero: Fight!", "goblin: Fight!", "hero: Win!", "goblin: Die!"])
-  })
-
+  // it("calls all the actors", function() {
+  //   var sys = new ActorSystem()
+  //   var hero = sys.spawn("hero")
+  //   var goblin = sys.spawn("goblin")
+  //   var messages = []
+  //
+  //   hero.receive(/.|)}>#, function(message) { messages.push("hero: " + message) })
+  //   hero.receive(/hero/, function(message) { messages.push("hero: " + message) })
+  //   goblin.receive(/.|)}>#, function(message) { messages.push("goblin: " + message) })
+  //
+  //
+  //   console.log("hero " + hero.mailbox)
+  //   console.log("goblin " + goblin.mailbox)
+  //   sys.send("Fight!")
+  //   // sys.send("wins", hero.id)
+  //   console.log("hero " + hero.mailbox)
+  //   console.log("goblin " + goblin.mailbox)
+  //   sys.callEach()
+  //   expect(messages).toEqual(["hero: Fight!", "goblin: Fight!"])
+  //   sys.callEach()
+  //   expect(messages).toEqual(["hero: Fight!", "goblin: Fight!", "hero: wins"])
+  // })
+  //
 });
+
+
