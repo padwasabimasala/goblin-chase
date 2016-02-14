@@ -81,7 +81,6 @@ monsterDeadImage.onload = function () {
 };
 monsterDeadImage.src = "images/monster-dead.png";
 
-// Game objects
 var hero = {
 	speed: 256 // movement in pixels per second
 };
@@ -89,8 +88,6 @@ var fireball = {
   speed: 256,
   active: false
 }
-// fireball.x = 100
-// fireball.y = 100
 
 fireball.timeSinceLastMove = 0;
 fireball.move = function(modifier) {
@@ -150,17 +147,6 @@ addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode];
 }, false);
 
-// Reset the game when the player catches a monster
-var setup = function () {
-  monster.reset()
-	hero.x = game.canvas.width / 2;
-	hero.y = game.canvas.height / 2;
-
-	// Throw the monster somewhere on the screen randomly
-	monster.x = 32 + (Math.random() * (game.canvas.width - 64));
-	monster.y = 32 + (Math.random() * (game.canvas.height - 64));
-};
-
 function enforceBoundaries(character) {
   if (character.y < 0) {
     character.y = 0
@@ -176,7 +162,16 @@ function enforceBoundaries(character) {
   }
 }
 
-// Update game objects
+var setup = function () {
+  monster.reset()
+	hero.x = game.canvas.width / 2;
+	hero.y = game.canvas.height / 2;
+
+	// Throw the monster somewhere on the screen randomly
+	monster.x = 32 + (Math.random() * (game.canvas.width - 64));
+	monster.y = 32 + (Math.random() * (game.canvas.height - 64));
+};
+
 var update = function (modifier) {
 	if (38 in keysDown) { // Player holding up
 		hero.y -= hero.speed * modifier;
@@ -224,7 +219,6 @@ var render = function () {
 	if (heroReady) { game.context.drawImage(heroImage, hero.x, hero.y); }
 	if (monsterReady) { game.context.drawImage(monster.image, monster.x, monster.y); }
   if (fireball.active) { game.context.drawImage(fireballImage, fireball.x, fireball.y); }
-
 	// Score
 	game.context.fillStyle = "rgb(250, 250, 250)";
 	game.context.font = "24px Helvetica";
@@ -246,7 +240,6 @@ var main = function () {
 	requestAnimationFrame(main);
 };
 
-// Let's play this game!
 setup();
 main();
 }
