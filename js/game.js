@@ -46,7 +46,8 @@ function GameObject(id, image_url, x, y) {
 }
 
 function init() {
-  // changeFavicon("file:///Users/matthew.thorley/src/goblin-chase/images/icon.png")
+  var monstersShot = 0;
+
   var game = new Game(512,480)
 
   var background = new GameObject("background", "images/background.png", 0, 0)
@@ -105,7 +106,6 @@ function init() {
     }
   }
 
-  var monstersShot = 0;
 
   // Handle keyboard controls
   var keysDown = {};
@@ -201,9 +201,9 @@ function init() {
   };
 
   // The main game loop
-  requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
-
+  var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
   var then = Date.now();
+
   var main = function () {
     var now = Date.now();
     var delta = now - then;
