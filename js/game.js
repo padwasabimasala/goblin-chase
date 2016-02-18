@@ -45,6 +45,27 @@ function GameObject(id, image_url, x, y) {
   this.y = y
 }
 
+function GameLoop(setup, update, render) {
+  var nextFrame = window.requestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.msRequestAnimationFrame ||
+      window.mozRequestAnimationFrame;
+
+  var then = Date.now();
+  var main = function() {
+    var now = Date.now();
+    var delta = now - then;
+    update(delta / 1000);
+    render();
+    then = now;
+    nextFrame(main);
+  };
+
+  this.start = function() {
+    setup();
+    main();
+  }
+}
 function init() {
   var monstersShot = 0;
 
@@ -200,19 +221,6 @@ function init() {
     drawScore()
   };
 
-  // The main game loop
-  var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
-  var then = Date.now();
-
-  var main = function () {
-    var now = Date.now();
-    var delta = now - then;
-    update(delta / 1000);
-    render();
-    then = now;
-    requestAnimationFrame(main);
-  };
-
-  setup();
-  main();
+  gl = new GameLoop(setup, update, render)
+  gl.start()
 }
