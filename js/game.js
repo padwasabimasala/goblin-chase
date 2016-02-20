@@ -66,11 +66,10 @@ function GameLoop(setup, update, render) {
     main();
   }
 }
+
 function init() {
   var monstersShot = 0;
-
   var game = new Game(512,480)
-
   var background = new GameObject("background", "images/background.png", 0, 0)
 
   var hero = new GameObject("hero", "images/hero.png")
@@ -126,7 +125,6 @@ function init() {
       monster.timeSinceLastMove = 0
     }
   }
-
 
   // Handle keyboard controls
   var keysDown = {};
@@ -199,7 +197,7 @@ function init() {
       fireball.active = false
       monster.kill()
       ++monstersShot;
-      setTimeout(setup, 1500)
+      setTimeout(setup, 500)
     }
   };
 

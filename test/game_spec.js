@@ -11,6 +11,18 @@ describe("Game", function () {
   })
 });
 
+describe("GameLoop", function() {
+  it("runs the loop", function() {
+    var setupCalled = false
+    function setup() { setupCalled = true }
+
+    gl = new GameLoop(setup, setup, setup)
+    gl.start()
+    expect(setupCalled).toBe(true)
+
+  })
+})
+
 describe("GameObject", function () {
   it("takes an id and an image", function() {
     var obj = new GameObject("hero", "images/hero.png")
