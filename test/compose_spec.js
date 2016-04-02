@@ -5,18 +5,6 @@ function Calc(base) {
   }
 }
 
-describe("Calc",function() {
-  it("has a base", function() {
-    adder = new Calc(10)
-    expect(adder.base).toEqual(10)
-  })
-  it("can add to the base", function() {
-    adder = new Calc(10)
-    adder.add(5)
-    expect(adder.base).toEqual(15)
-  })
-})
-
 function eachProperty(obj, func) {
   for (p in obj) {
     if (obj.hasOwnProperty(p) == true)
@@ -38,17 +26,28 @@ describe("eachProperty", function() {
 
 function compose(a, b) {
   eachProperty(b, function(name, value) {
+    if (a[name] != undefined)
+      throw "Can not compose. Property '" + name + "' already defined on " + a
     a[name] = value
   })
 }
 
 describe("Compose", function() {
-  it("adds the properties of the second thing to the first", function() {
+  it("adds the properties of the second object to the first", function() {
     var thing = {}
     var calc = new Calc(10)
     compose(thing, calc)
     expect(thing.base).toEqual(10)
     thing.add(5)
     expect(thing.base).toEqual(15)
+  })
+
+  it("errors if a property of the second is already defined on the first", function() {
+    var thing = { base: "already defined" }
+    var calc = new Calc(10)
+    var wrap = function() {
+      compose(thing, calc)
+    }
+    expect(wrap).toThrow()
   })
 })
