@@ -1,17 +1,9 @@
-function Object() {
-
-}
-
 function Calc(base) {
   this.base = base
   this.add = function(value) {
     this.base += value
   }
 }
-
-describe("Object", function() {
-  obj = new Object()
-})
 
 describe("Calc",function() {
   it("has a base", function() {
@@ -51,12 +43,12 @@ function compose(a, b) {
 }
 
 describe("Compose", function() {
-  it("adds the properties of the second object to the first", function() {
-    var object = new Object()
+  it("adds the properties of the second thing to the first", function() {
+    var thing = {}
     var calc = new Calc(10)
-    compose(object, calc)
-    expect(object.base).toEqual(10)
-    object.add(5)
-    expect(object.base).toEqual(15)
+    compose(thing, calc)
+    expect(thing.base).toEqual(10)
+    thing.add(5)
+    expect(thing.base).toEqual(15)
   })
 })
